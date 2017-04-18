@@ -1,0 +1,47 @@
+version: '2'
+services:
+  front:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:9000"
+    links:
+      - mysql:mysql
+      - memcached:memcached
+    volumes:
+      - application:/var/www/default
+      - ./sites:/etc/nginx/conf.d
+      - ./logs:/var/log/supervisor
+
+  deploy:
+    build: ./application
+    links:
+      - mysql:mysql
+    volumes:
+      - application:/var/www/default
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql57:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: savvy
+
+  mysqlData:
+    image: mysql:5.7
+    entrypoint: /bin/bash
+    volumes:
+      - mysql57:/var/lib/mysql
+
+  memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+
+volumes:
+  application:
+  mysql57:
