@@ -27,6 +27,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql57:/var/lib/mysql
+      - ./conf/my.cnf:/etc/mysql/conf.d
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: savvy
@@ -36,6 +37,7 @@ services:
     entrypoint: /bin/bash
     volumes:
       - mysql57:/var/lib/mysql
+      - ./conf/my.cnf:/etc/mysql/conf.d
 
   memcached:
     image: memcached
